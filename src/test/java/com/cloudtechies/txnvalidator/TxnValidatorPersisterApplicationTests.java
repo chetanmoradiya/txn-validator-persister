@@ -1,4 +1,4 @@
-package com.iris.hackathon.txnvalidator;
+package com.cloudtechies.txnvalidator;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

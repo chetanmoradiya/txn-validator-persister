@@ -1,4 +1,4 @@
-package com.iris.hackathon.txnvalidator;
+package com.cloudtechies.txnvalidator;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
