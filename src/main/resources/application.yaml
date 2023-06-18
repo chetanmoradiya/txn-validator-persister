@@ -1,0 +1,23 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql//localhost:5432/hackathon
+    jpa:
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+txn:
+  validator:
+    persister:
+      kafkaClusterURL: localhost:9092
+      kafkaConsumerGroupName: txnValidatorPersister
+      KafkaTxnDataInputTopic: txn-data-input
+      restRetryCount: 5
+      restBackoffTime: 100
+      maxPollSize: 3
+      KafkaTxnDataOutputTopic: txn-data-output
+
+

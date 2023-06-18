@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.iris.hackathon</groupId>
 	<artifactId>txn-validator-persister</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>txn-validator-persister</name>
 	<description>Transaction Validator Persister</description>
 	<properties>
