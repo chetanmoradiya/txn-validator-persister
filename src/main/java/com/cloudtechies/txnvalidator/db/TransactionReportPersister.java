@@ -7,7 +7,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class TxnReportPersister {
+public class TransactionReportPersister {
     public void persistTxns(List<String> messages, List<String> payloadIds) {
     }
 }

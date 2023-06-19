@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-public class TxnValidatorProperties {
+public class TransactionValidatorProperties {
 
     @Value("${txn.validator.persister.kafkaClusterURL}")
     private String kafkaClusterURL;

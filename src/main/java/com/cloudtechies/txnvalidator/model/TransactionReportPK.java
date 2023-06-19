@@ -8,10 +8,13 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
+@NoArgsConstructor
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class TxnReportPK implements Serializable {
-    private UUID txnId;
+public class TransactionReportPK implements Serializable {
+
+    private UUID instructionId;
+
     private Instant createTs;
+
 }

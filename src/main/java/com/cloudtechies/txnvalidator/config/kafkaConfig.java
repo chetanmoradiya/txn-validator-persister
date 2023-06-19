@@ -26,15 +26,15 @@ import java.util.Map;
 public class kafkaConfig {
 
     @Autowired
-    private TxnValidatorProperties txnValidatorProperties;
+    private TransactionValidatorProperties transactionValidatorProperties;
 
     @Bean
     public ConsumerFactory<String,String> consumerFactory(){
         log.info("Creating consumer factory");
         Map<String,Object> props=new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,txnValidatorProperties.getKafkaClusterURL());
-        props.put(ConsumerConfig.GROUP_ID_CONFIG,txnValidatorProperties.getKafkaConsumerGroupName());
-        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG,txnValidatorProperties.getMaxPollSize());
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, transactionValidatorProperties.getKafkaClusterURL());
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, transactionValidatorProperties.getKafkaConsumerGroupName());
+        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, transactionValidatorProperties.getMaxPollSize());
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,StringDeserializer.class);
         return new DefaultKafkaConsumerFactory<>(props);
@@ -44,7 +44,7 @@ public class kafkaConfig {
     public ProducerFactory<String,String> producerFactory(){
         log.info("Creating producer factory");
         Map<String,Object> props=new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,txnValidatorProperties.getKafkaClusterURL());
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, transactionValidatorProperties.getKafkaClusterURL());
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         return new DefaultKafkaProducerFactory<>(props);
@@ -60,6 +60,6 @@ public class kafkaConfig {
     }
 
     public NewTopic txnDataInput(){
-        return TopicBuilder.name(txnValidatorProperties.getKafkaTxnDataInputTopic()).build();
+        return TopicBuilder.name(transactionValidatorProperties.getKafkaTxnDataInputTopic()).build();
     }
 }

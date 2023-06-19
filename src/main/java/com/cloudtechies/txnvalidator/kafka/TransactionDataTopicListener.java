@@ -1,7 +1,7 @@
 package com.cloudtechies.txnvalidator.kafka;
 
-import com.cloudtechies.txnvalidator.config.TxnValidatorProperties;
-import com.cloudtechies.txnvalidator.db.TxnReportPersister;
+import com.cloudtechies.txnvalidator.config.TransactionValidatorProperties;
+import com.cloudtechies.txnvalidator.db.TransactionReportPersister;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -17,16 +17,16 @@ import java.util.Map;
 
 @Service
 @Slf4j
-public class TxnDataTopicListener {
+public class TransactionDataTopicListener {
 
     @Autowired
-    TxnValidatorProperties txnValidatorProperties;
+    TransactionValidatorProperties transactionValidatorProperties;
 
     @Autowired
-    TxnReportPersister txnReportPersister;
+    TransactionReportPersister transactionReportPersister;
 
-    @KafkaListener(topics = "#{txnValidatorProperties.KafkaTxnDataInputTopic}",
-                   groupId = "#{txnValidatorProperties.kafkaConsumerGroupName}",
+    @KafkaListener(topics = "#{transactionValidatorProperties.KafkaTxnDataInputTopic}",
+                   groupId = "#{transactionValidatorProperties.kafkaConsumerGroupName}",
                    concurrency = "1")
     public void handleTxnInputEvent(@Payload List<String> messages,
                                     @Header(KafkaHeaders.BATCH_CONVERTED_HEADERS) List<Map<String,?>> batchConverterHeaders){
@@ -39,6 +39,6 @@ public class TxnDataTopicListener {
             payloadTS.add(Instant.ofEpochMilli((Long) item.get("PAYLOAD_TS")));
         }
 
-        txnReportPersister.persistTxns(messages,payloadIds);
+        transactionReportPersister.persistTxns(messages,payloadIds);
     }
 }

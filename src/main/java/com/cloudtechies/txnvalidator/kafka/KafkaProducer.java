@@ -19,14 +19,14 @@ public class KafkaProducer {
     @Autowired
     private KafkaTemplate<String,String> kafkaTemplate;
 
-    public void send(String topic, String message, Map<String,Object> headersMap){
+    public void send(String topic, String message, String key, Map<String,Object> headersMap){
         Headers headers=new RecordHeaders();
         MessageHeaders messageHeaders=new MessageHeaders(headersMap);
         new DefaultKafkaHeaderMapper().fromHeaders(messageHeaders,headers);
 
         ProducerRecord<String,String> producerRecord=new ProducerRecord<>(
                 topic,0,"",message,headers);
-        log.info("kafka template [inTransaction] set to [{}]", kafkaTemplate.inTransaction());
+        log.info("Sending message to output topic.");
 
         kafkaTemplate.send(producerRecord);
     }
