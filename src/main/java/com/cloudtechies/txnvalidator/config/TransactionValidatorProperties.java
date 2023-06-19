@@ -17,8 +17,11 @@ public class TransactionValidatorProperties {
     @Value("${txn.validator.persister.KafkaTxnDataInputTopic}")
     private String KafkaTxnDataInputTopic;
 
-    @Value("${txn.validator.persister.KafkaTxnDataOutputTopic}")
-    private String KafkaTxnDataOutputTopic;
+    @Value("${txn.validator.persister.KafkaValidTxnDataOutputTopic}")
+    private String KafkaValidTxnDataOutputTopic;
+
+    @Value("${txn.validator.persister.KafkaInValidTxnDataOutputTopic}")
+    private String KafkaInValidTxnDataOutputTopic;
 
     @Value("${txn.validator.persister.restRetryCount}")
     private Integer restRetryCount;

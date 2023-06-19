@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.cloudtechies.txnvalidator</groupId>
 	<artifactId>txn-validator-persister</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<name>txn-validator-persister</name>
 	<description>Transaction Validator Persister</description>
 	<properties>
@@ -33,7 +33,11 @@
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>com.vladmihalcea</groupId>
+			<artifactId>hibernate-types-52</artifactId>
+			<version>2.21.1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>

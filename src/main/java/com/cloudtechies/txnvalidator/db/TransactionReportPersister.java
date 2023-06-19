@@ -1,13 +1,19 @@
 package com.cloudtechies.txnvalidator.db;
 
+import com.cloudtechies.txnvalidator.model.TransactionReport;
+import com.cloudtechies.txnvalidator.repos.TransactionReportRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
-
-@Service
+@Component
 @Slf4j
 public class TransactionReportPersister {
-    public void persistTxns(List<String> messages, List<String> payloadIds) {
+
+    @Autowired
+    TransactionReportRepository transactionReportRepository;
+
+    public void persistTxns(TransactionReport transactionReport) {
+        transactionReportRepository.save(transactionReport);
     }
 }

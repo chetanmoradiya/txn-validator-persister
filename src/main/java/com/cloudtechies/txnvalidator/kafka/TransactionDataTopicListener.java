@@ -1,7 +1,7 @@
 package com.cloudtechies.txnvalidator.kafka;
 
 import com.cloudtechies.txnvalidator.config.TransactionValidatorProperties;
-import com.cloudtechies.txnvalidator.db.TransactionReportPersister;
+import com.cloudtechies.txnvalidator.validator.TransactionDataValidation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -21,9 +21,8 @@ public class TransactionDataTopicListener {
 
     @Autowired
     TransactionValidatorProperties transactionValidatorProperties;
-
     @Autowired
-    TransactionReportPersister transactionReportPersister;
+    TransactionDataValidation transactionDataValidation;
 
     @KafkaListener(topics = "#{transactionValidatorProperties.KafkaTxnDataInputTopic}",
                    groupId = "#{transactionValidatorProperties.kafkaConsumerGroupName}",
@@ -38,7 +37,7 @@ public class TransactionDataTopicListener {
             payloadIds.add((String) item.get("PAYLOAD_ID"));
             payloadTS.add(Instant.ofEpochMilli((Long) item.get("PAYLOAD_TS")));
         }
-
-        transactionReportPersister.persistTxns(messages,payloadIds);
+        //validate transactions
+        transactionDataValidation.validateData(messages,payloadIds);
     }
 }
