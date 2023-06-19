@@ -28,6 +28,7 @@ public class DataValidationExceptionHandler {
             TransactionError transactionError=TransactionError.builder().
                     rejectedField(rejectedField).
                     rejectedReason(errorMessage).build();
+            transactionErrors.add(transactionError);
         });
 
         TransactionReport transactionReport = (TransactionReport) bindingResult.getTarget();
