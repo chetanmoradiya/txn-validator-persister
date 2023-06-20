@@ -13,7 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.*;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +47,6 @@ public class TransactionDataValidation {
             try {
                 transactionReport=objectMapper.readValue(messages.get(i),TransactionReport.class);
             } catch (JsonProcessingException e) {
-                System.out.println(e.getMessage());
                 log.error("Got error while deserializing message to TransactionReport {}",e.getMessage());
                 throw new UnrecoverableException(e.getMessage());
             }
