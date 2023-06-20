@@ -8,12 +8,16 @@ import com.cloudtechies.txnvalidator.kafka.KafkaOutputAdapter;
 import com.cloudtechies.txnvalidator.model.TransactionReport;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.*;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -30,11 +34,17 @@ public class TransactionDataValidation {
 
     public void validateData(List<String> messages, List<String> payloadIds) {
         ObjectMapper objectMapper=new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
         for(int i=0;i< messages.size();i++){
             TransactionReport transactionReport;
             try {
                 transactionReport=objectMapper.readValue(messages.get(i),TransactionReport.class);
             } catch (JsonProcessingException e) {
+                System.out.println(e.getMessage());
                 log.error("Got error while deserializing message to TransactionReport {}",e.getMessage());
                 throw new UnrecoverableException(e.getMessage());
             }
@@ -44,12 +54,13 @@ public class TransactionDataValidation {
 
             String outputTopicMessage;
 
-            //if validation failed then txn status should be set earlier
-            if(transactionReport.getTxnStatus()==null){
+            //if rejected reasons are null then it is valid transaction, otherwise invalid transaction
+            if(getRejectedReasons(validator,transactionReport)==null){
                 transactionReport.setTxnStatus(TransactionStatus.ACPT);
                 outputTopicMessage=getSerializeMessage(transactionReport,objectMapper);
                 kafkaOutputAdapter.sendMsgToKafka(outputTopicMessage,transactionValidatorProperties.getKafkaValidTxnDataOutputTopic());
             }else{
+                transactionReport.setTxnStatus(TransactionStatus.RJCT);
                 outputTopicMessage=getSerializeMessage(transactionReport,objectMapper);
                 kafkaOutputAdapter.sendMsgToKafka(outputTopicMessage,transactionValidatorProperties.getKafkaInValidTxnDataOutputTopic());
             }
@@ -57,6 +68,19 @@ public class TransactionDataValidation {
             //persist transaction after validation
             transactionReportPersister.persistTxns(transactionReport);
         }
+    }
+
+    private List<String> getRejectedReasons(Validator validator, TransactionReport transactionReport)
+    {
+        Set<ConstraintViolation<TransactionReport>> violations = validator.validate(transactionReport);
+        if (!violations.isEmpty()) {
+            List<String> rejectedReasons=new ArrayList<>();
+            for(ConstraintViolation<TransactionReport> violation:violations){
+                rejectedReasons.add(violation.getMessage());
+            }
+            return rejectedReasons;
+        }
+        return null;
     }
 
     private String getSerializeMessage(TransactionReport transactionReport, ObjectMapper objectMapper) {

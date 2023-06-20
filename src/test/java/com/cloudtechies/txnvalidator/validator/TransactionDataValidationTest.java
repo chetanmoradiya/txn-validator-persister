@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,8 +27,9 @@ class TransactionDataValidationTest {
 
     @Test
     void testValidation(){
-        List<String> messages=List.of(TestUtil.getMessage1());
-        List<String> payloadId=List.of("c6a8669e-ee95-4c42-9ef6-4a9b61380164");
+
+        List<String> messages= Arrays.asList(TestUtil.getMessage1());
+        List<String> payloadId=Arrays.asList("c6a8669e-ee95-4c42-9ef6-4a9b61380164");
         transactionDataValidation.validateData(messages,payloadId);
     }
 
