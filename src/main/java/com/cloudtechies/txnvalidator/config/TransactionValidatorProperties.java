@@ -17,9 +17,6 @@ public class TransactionValidatorProperties {
     @Value("${txn.validator.persister.KafkaTxnDataInputTopic}")
     private String KafkaTxnDataInputTopic;
 
-    @Value("${txn.validator.persister.KafkaValidTxnDataOutputTopic}")
-    private String KafkaValidTxnDataOutputTopic;
-
     @Value("${txn.validator.persister.KafkaInValidTxnDataOutputTopic}")
     private String KafkaInValidTxnDataOutputTopic;
 

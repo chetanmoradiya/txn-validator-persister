@@ -18,7 +18,6 @@ txn:
       restRetryCount: 5
       restBackoffTime: 100
       maxPollSize: 3
-      KafkaValidTxnDataOutputTopic: valid-txn-data-output
       KafkaInValidTxnDataOutputTopic: invalid-txn-data-output
 
 

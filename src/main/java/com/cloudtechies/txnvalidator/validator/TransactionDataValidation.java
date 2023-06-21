@@ -31,7 +31,6 @@ public class TransactionDataValidation {
     TransactionReportPersister transactionReportPersister;
     @Autowired
     KafkaOutputAdapter kafkaOutputAdapter;
-
     @Autowired
     TransactionValidatorProperties transactionValidatorProperties;
 
@@ -47,8 +46,8 @@ public class TransactionDataValidation {
             try {
                 transactionReport=objectMapper.readValue(messages.get(i),TransactionReport.class);
             } catch (JsonProcessingException e) {
-                log.error("Got error while deserializing message to TransactionReport {}",e.getMessage());
-                throw new UnrecoverableException(e.getMessage());
+                    log.error("Got error while deserializing message to TransactionReport {}",e.getMessage());
+                    throw new UnrecoverableException(e.getMessage());
             }
             transactionReport.setTransactionReportId(UUID.randomUUID());
             transactionReport.setPayloadId(UUID.fromString(payloadIds.get(i)));
@@ -57,18 +56,19 @@ public class TransactionDataValidation {
             String outputTopicMessage;
 
             //if rejected reasons are null then it is valid transaction, otherwise invalid transaction
-            if(getRejectedReasons(validator,transactionReport)==null){
-                transactionReport.setTxnStatus(TransactionStatus.ACPT);
-                outputTopicMessage=getSerializeMessage(transactionReport,objectMapper);
-                kafkaOutputAdapter.sendMsgToKafka(outputTopicMessage,transactionValidatorProperties.getKafkaValidTxnDataOutputTopic());
+            List<String> rejectedReasons=getRejectedReasons(validator,transactionReport);
+            if(rejectedReasons==null){
+                transactionReport.setTxnStatus(TransactionStatus.PREENRICHVALID);
+                //persist transaction after validation
+                transactionReportPersister.persistTxns(transactionReport);
             }else{
                 transactionReport.setTxnStatus(TransactionStatus.RJCT);
+                transactionReport.setRjctReasons(rejectedReasons);
+                //persist transaction after validation
+                transactionReportPersister.persistTxns(transactionReport);
                 outputTopicMessage=getSerializeMessage(transactionReport,objectMapper);
                 kafkaOutputAdapter.sendMsgToKafka(outputTopicMessage,transactionValidatorProperties.getKafkaInValidTxnDataOutputTopic());
             }
-
-            //persist transaction after validation
-            transactionReportPersister.persistTxns(transactionReport);
         }
     }
 
