@@ -14,10 +14,10 @@ txn:
     persister:
       kafkaClusterURL: localhost:9092
       kafkaConsumerGroupName: txnValidatorPersister
-      KafkaTxnDataInputTopic: txn-data-input
+      kafkaTxnDataInputTopic: txn-data-input
       restRetryCount: 5
       restBackoffTime: 100
       maxPollSize: 3
-      KafkaInValidTxnDataOutputTopic: invalid-txn-data-output
+      kafkaInValidTxnDataOutputTopic: invalid-txn-data-output
 
 
