@@ -61,13 +61,15 @@ public class TransactionDataValidation {
                 transactionReport.setTxnStatus(TransactionStatus.PREENRICHVALID);
                 //persist transaction after validation
                 transactionReportPersister.persistTxns(transactionReport);
+                outputTopicMessage=getSerializeMessage(transactionReport,objectMapper);
+                kafkaOutputAdapter.sendMsgToKafka(outputTopicMessage,transactionValidatorProperties.getKafkaPrEnrValidTxnDataOutputTopic());
             }else{
                 transactionReport.setTxnStatus(TransactionStatus.RJCT);
                 transactionReport.setRjctReasons(rejectedReasons);
                 //persist transaction after validation
                 transactionReportPersister.persistTxns(transactionReport);
                 outputTopicMessage=getSerializeMessage(transactionReport,objectMapper);
-                kafkaOutputAdapter.sendMsgToKafka(outputTopicMessage,transactionValidatorProperties.getKafkaInValidTxnDataOutputTopic());
+                kafkaOutputAdapter.sendMsgToKafka(outputTopicMessage,transactionValidatorProperties.getKafkaRjctTxnDataOutputTopic());
             }
         }
     }

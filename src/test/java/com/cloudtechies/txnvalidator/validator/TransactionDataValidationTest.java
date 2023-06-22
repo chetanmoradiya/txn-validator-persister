@@ -49,7 +49,7 @@ class TransactionDataValidationTest {
     {
         payloadId=Arrays.asList("c6a8669e-ee95-4c42-9ef6-4a9b61380164");
 
-        when(transactionValidatorProperties.getKafkaInValidTxnDataOutputTopic()).thenReturn(null);
+        when(transactionValidatorProperties.getKafkaRjctTxnDataOutputTopic()).thenReturn(null);
         doNothing().when(transactionReportPersister).persistTxns(any());
         doNothing().when(kafkaOutputAdapter).sendMsgToKafka(any(),any());
     }

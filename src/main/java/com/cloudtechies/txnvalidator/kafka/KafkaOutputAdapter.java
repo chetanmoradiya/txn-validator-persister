@@ -12,6 +12,6 @@ public class KafkaOutputAdapter {
     KafkaProducer kafkaProducer;
 
     public void sendMsgToKafka(String msg, String topic){
-        kafkaProducer.send(topic,msg,"key",new HashMap<>());
+        kafkaProducer.send(topic,msg,new HashMap<>());
     }
 }

@@ -18,6 +18,7 @@ txn:
       restRetryCount: 5
       restBackoffTime: 100
       maxPollSize: 3
-      kafkaInValidTxnDataOutputTopic: invalid-txn-data-output
+      kafkaRjctTxnDataOutputTopic: rjct-txn-data-output
+      kafkaPrEnrValidTxnDataOutputTopic: prenrvalid-txn-data-output
 
 
