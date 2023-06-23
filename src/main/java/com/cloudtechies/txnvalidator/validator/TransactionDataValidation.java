@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +83,17 @@ public class TransactionDataValidation {
             List<String> rejectedReasons=new ArrayList<>();
             for(ConstraintViolation<TransactionReport> violation:violations){
                 rejectedReasons.add(violation.getMessage());
+
+                String key = ((PathImpl) violation.getPropertyPath()).getLeafNode().getName();
+                Field field = null;
+                try {
+                    field = TransactionReport.class.getDeclaredField(key);
+                    field.setAccessible(true);
+                    field.set(transactionReport, null);
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    log.error("Error while Setting property.");
+                    rejectedReasons.add("Nullify Error!");
+                }
             }
             return rejectedReasons;
         }
