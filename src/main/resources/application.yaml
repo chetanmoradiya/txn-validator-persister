@@ -5,9 +5,9 @@ spring:
   datasource:
     username: postgres
     url: jdbc:postgresql://localhost:5432/hackathon
-    password: admin
-    hikari:
-      schema: cloudtechies
+    password: postgres
+#    hikari:
+#      schema: cloudtechies
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
@@ -24,7 +24,7 @@ txn:
       restRetryCount: 5
       restBackoffTime: 100
       maxPollSize: 3
-      kafkaRjctTxnDataOutputTopic: rjct-txn-data-output
+      kafkaRjctTxnDataOutputTopic: downstream-topic
       kafkaPrEnrValidTxnDataOutputTopic: prenrvalid-txn-data-output
 
 

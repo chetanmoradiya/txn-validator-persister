@@ -22,6 +22,8 @@ import org.mockito.quality.Strictness;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -180,6 +182,17 @@ class TransactionDataValidationTest {
         assertTrue(transactionReport.getRjctReasons().get(1).contains("should not be greater than 100 alphanumeric"));
         assertEquals(TransactionStatus.RJCT,transactionReport.getTxnStatus());
         verify(kafkaOutputAdapter,times(1)).sendMsgToKafka(any(),any());
+    }
+
+    @Test
+    void test_regex(){
+        Pattern pattern=Pattern.compile("^$|^[a-zA-Z0-9]{5}$");
+        Matcher matcher=pattern.matcher(" ");
+        if(matcher.find()){
+            System.out.println("work");
+        }else{
+            System.out.println("not work");
+        }
     }
 
 }

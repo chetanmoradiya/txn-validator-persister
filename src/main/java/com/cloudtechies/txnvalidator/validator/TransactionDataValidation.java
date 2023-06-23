@@ -59,6 +59,7 @@ public class TransactionDataValidation {
                 Instant trCreateTs  = existingTr.getCreateTs();
                 transactionReport.setTransactionReportId(trRepId);
                 transactionReport.setCreateTs(trCreateTs);
+                transactionReport.setUpdateTs(Instant.now());
             }else{
                 transactionReport.setTransactionReportId(UUID.randomUUID());
                 transactionReport.setCreateTs(Instant.now());

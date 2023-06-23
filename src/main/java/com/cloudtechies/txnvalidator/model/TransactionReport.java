@@ -173,12 +173,12 @@ public class TransactionReport {
     @JsonProperty("LOAN FURTHER SUB PRODUCT")
     private String loanFurthrSubProd;
 
-    @Pattern(regexp = "^[a-zA-Z0-9]{20}$", message = "LOAN LEI OF THE ISSUER should be 20 alphanumeric")
+    @Pattern(regexp = "^$|^[a-zA-Z0-9]{20}$", message = "LOAN LEI OF THE ISSUER should be 20 alphanumeric")
     @Column(name="loan_lei_of_issuer")
     @JsonProperty("LOAN LEI OF THE ISSUER")
     private String loanLeiOfIssuer;
 
-    @Pattern(regexp = "([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))", message = "LOAN MATURITY OF THE SECURITY should be in yyyy-MM-dd format")
+    @Pattern(regexp = "^$|^([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))$", message = "LOAN MATURITY OF THE SECURITY should be in yyyy-MM-dd format")
     @Column(name="loan_maturity_of_secu")
     @JsonProperty("LOAN MATURITY OF THE SECURITY")
     private String loanMaturityOfSecurity;
