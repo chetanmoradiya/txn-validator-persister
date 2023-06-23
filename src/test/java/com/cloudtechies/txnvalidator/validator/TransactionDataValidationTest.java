@@ -1,7 +1,7 @@
 package com.cloudtechies.txnvalidator.validator;
 
 import com.cloudtechies.txnvalidator.config.TransactionValidatorProperties;
-import com.cloudtechies.txnvalidator.db.TransactionReportPersister;
+import com.cloudtechies.txnvalidator.db.TransactionReportRepoImpl;
 import com.cloudtechies.txnvalidator.enums.TransactionStatus;
 import com.cloudtechies.txnvalidator.kafka.KafkaOutputAdapter;
 import com.cloudtechies.txnvalidator.model.TransactionReport;
@@ -34,7 +34,7 @@ class TransactionDataValidationTest {
     @InjectMocks
     TransactionDataValidation transactionDataValidation;
     @Mock
-    TransactionReportPersister transactionReportPersister;
+    TransactionReportRepoImpl transactionReportPersister;
     @Mock
     KafkaOutputAdapter kafkaOutputAdapter;
     @Mock

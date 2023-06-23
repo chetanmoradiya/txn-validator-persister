@@ -1,7 +1,7 @@
 package com.cloudtechies.txnvalidator.validator;
 
 import com.cloudtechies.txnvalidator.config.TransactionValidatorProperties;
-import com.cloudtechies.txnvalidator.db.TransactionReportPersister;
+import com.cloudtechies.txnvalidator.db.TransactionReportRepoImpl;
 import com.cloudtechies.txnvalidator.enums.TransactionStatus;
 import com.cloudtechies.txnvalidator.exception.UnrecoverableException;
 import com.cloudtechies.txnvalidator.kafka.KafkaOutputAdapter;
@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.internal.engine.path.PathImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +21,14 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.lang.reflect.Field;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
 public class TransactionDataValidation {
 
     @Autowired
-    TransactionReportPersister transactionReportPersister;
+    TransactionReportRepoImpl transactionReportRepo;
     @Autowired
     KafkaOutputAdapter kafkaOutputAdapter;
     @Autowired
@@ -51,9 +49,20 @@ public class TransactionDataValidation {
                     log.error("Got error while deserializing message to TransactionReport {}",e.getMessage());
                     throw new UnrecoverableException(e.getMessage());
             }
-            transactionReport.setTransactionReportId(UUID.randomUUID());
             transactionReport.setPayloadId(UUID.fromString(payloadIds.get(i)));
-            transactionReport.setCreateTs(Instant.now());
+            Optional<TransactionReport> existing = transactionReportRepo.getExistingTransactionReportIfAny(transactionReport.getPayloadId(),transactionReport.getTrnId());
+
+            if(existing.isPresent()){
+                log.info("Existing transaction found with TRN_ID and PAYLOAD_ID, will update with new data");
+                TransactionReport existingTr = existing.get();
+                UUID trRepId = existingTr.getTransactionReportId();
+                Instant trCreateTs  = existingTr.getCreateTs();
+                transactionReport.setTransactionReportId(trRepId);
+                transactionReport.setCreateTs(trCreateTs);
+            }else{
+                transactionReport.setTransactionReportId(UUID.randomUUID());
+                transactionReport.setCreateTs(Instant.now());
+            }
 
             String outputTopicMessage;
 
@@ -62,14 +71,14 @@ public class TransactionDataValidation {
             if(rejectedReasons==null){
                 transactionReport.setTxnStatus(TransactionStatus.PREENRICHVALID);
                 //persist transaction after validation
-                transactionReportPersister.persistTxns(transactionReport);
+                transactionReportRepo.persistTxns(transactionReport);
                 outputTopicMessage=getSerializeMessage(transactionReport,objectMapper);
                 kafkaOutputAdapter.sendMsgToKafka(outputTopicMessage,transactionValidatorProperties.getKafkaPrEnrValidTxnDataOutputTopic());
             }else{
                 transactionReport.setTxnStatus(TransactionStatus.RJCT);
                 transactionReport.setRjctReasons(rejectedReasons);
                 //persist transaction after validation
-                transactionReportPersister.persistTxns(transactionReport);
+                transactionReportRepo.persistTxns(transactionReport);
                 outputTopicMessage=getSerializeMessage(transactionReport,objectMapper);
                 kafkaOutputAdapter.sendMsgToKafka(outputTopicMessage,transactionValidatorProperties.getKafkaRjctTxnDataOutputTopic());
             }
