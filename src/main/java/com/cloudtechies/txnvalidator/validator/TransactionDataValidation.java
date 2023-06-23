@@ -74,8 +74,8 @@ public class TransactionDataValidation {
         }
     }
 
-    private List<String> getRejectedReasons(Validator validator, TransactionReport transactionReport)
-    {
+    private List<String> getRejectedReasons(Validator validator, TransactionReport transactionReport) {
+
         Set<ConstraintViolation<TransactionReport>> violations = validator.validate(transactionReport);
         if (!violations.isEmpty()) {
             List<String> rejectedReasons=new ArrayList<>();

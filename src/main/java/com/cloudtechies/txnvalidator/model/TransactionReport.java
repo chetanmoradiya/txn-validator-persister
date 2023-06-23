@@ -4,6 +4,7 @@ import com.cloudtechies.txnvalidator.enums.TransactionStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.*;
+import org.hibernate.annotations.Check;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 

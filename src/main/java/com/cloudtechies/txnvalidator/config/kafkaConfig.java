@@ -61,6 +61,7 @@ public class kafkaConfig {
         return factory;
     }
 
+    @Bean
     public NewTopic txnDataInput(){
         return TopicBuilder.name(transactionValidatorProperties.getKafkaTxnDataInputTopic()).build();
     }
