@@ -23,7 +23,7 @@ txn:
       kafkaTxnDataInputTopic: txn-data-input
       restRetryCount: 5
       restBackoffTime: 100
-      maxPollSize: 3
+      maxPollSize: 500
       kafkaRjctTxnDataOutputTopic: downstream-topic
       kafkaPrEnrValidTxnDataOutputTopic: prenrvalid-txn-data-output
 

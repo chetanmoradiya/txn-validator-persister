@@ -26,7 +26,7 @@ public class KafkaProducer {
 
         ProducerRecord<String,String> producerRecord=new ProducerRecord<>(
                 topic,0,"",message,headers);
-        log.info("Sending message to output topic.");
+        //log.info("Sending message to output topic.");
 
         kafkaTemplate.send(producerRecord);
     }

@@ -29,7 +29,7 @@ public class TransactionDataTopicListener {
                    concurrency = "1")
     public void handleTxnInputEvent(@Payload List<String> messages,
                                     @Header(KafkaHeaders.BATCH_CONVERTED_HEADERS) List<Map<String,?>> batchConverterHeaders){
-        log.info("message received:{}",messages);
+        log.info("message received:{}",messages.size());
         List<String> payloadIds =new ArrayList<>();
         List<Instant> payloadTS=new ArrayList<>();
 
